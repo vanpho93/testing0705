@@ -1,9 +1,9 @@
 const express = require('express');
-const { urlencoded } = require('body-parser');
+const { json } = require('body-parser');
 
 const app = express();
 
-app.use(urlencoded({ extended: false }));
+app.use(json());
 
 app.get('/chia/:soA/:soB', (req, res) => {
     const { soA, soB } = req.params;
