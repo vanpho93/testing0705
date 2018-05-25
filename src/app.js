@@ -1,32 +1,34 @@
 const express = require('express');
 const { json } = require('body-parser');
+const { User } = require('./models/user.model');
 
 const app = express();
-
 app.use(json());
 
-app.get('/chia/:soA/:soB', (req, res) => {
-    const { soA, soB } = req.params;
-    if (isNaN(soA) || isNaN(soB)) {
-        return res.status(400).send({ success: false, message: 'INVALID_TYPE' });
-    }
-    if (soB == 0) {
-        return res.status(400).send({ success: false, message: 'DIVIDE_BY_ZERO' });
-    }
-    const result = +soA / +soB;
-    res.status(200).send({ success: true, result });
+app.get('/user', (req, res) => {
+    User.find({})
+    .then(users => res.send({ success: true, users }));
 });
 
-app.post('/chia', (req, res) => {
-    const { soA, soB } = req.body;
-    if (isNaN(soA) || isNaN(soB)) {
-        return res.status(400).send({ success: false, message: 'INVALID_TYPE' });
-    }
-    if (soB == 0) {
-        return res.status(400).send({ success: false, message: 'DIVIDE_BY_ZERO' });
-    }
-    const result = +soA / +soB;
-    res.status(200).send({ success: true, result });
+app.post('/user/signup', (req, res) => {
+    const { name, email, password } = req.body;
+    const user = new User({ name, email, password });
+    user.save()
+    .then(() => res.send({ success: true, user }))
+    .catch(error => res.send({ success: false, message: error.message }));
+});
+
+app.post('/user/signin', (req, res) => {
+    const { email, password } = req.body;
+    User.findOne({ email, password })
+    .then(user => {
+        if (!user) throw new Error('Invalid user info');
+        res.send({ success: true, user });
+    })
+    .catch(error => res.send({ success: false, message: error.message }));
 });
 
 module.exports = { app };
+
+// npm intellisense
+// path intellisense
