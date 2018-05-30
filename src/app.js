@@ -25,6 +25,13 @@ app.post('/user/signin', (req, res) => {
     .catch(error => res.send({ success: false, message: error.message }));
 });
 
+app.post('/user/check', (req, res) => {
+    const { token } = req.body;
+    UserService.checkToken(token)
+    .then(user => res.send({ success: true, user }))
+    .catch(error => res.send({ success: false, message: error.message }));
+});
+
 module.exports = { app };
 
 // npm intellisense
