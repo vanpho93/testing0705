@@ -1,5 +1,6 @@
 const express = require('express');
 const { json } = require('body-parser');
+const { hash, compare } = require('bcrypt');
 const { User } = require('./models/user.model');
 
 const app = express();
@@ -10,9 +11,10 @@ app.get('/user', (req, res) => {
     .then(users => res.send({ success: true, users }));
 });
 
-app.post('/user/signup', (req, res) => {
+app.post('/user/signup', async (req, res) => {
     const { name, email, password } = req.body;
-    const user = new User({ name, email, password });
+    const encrypted = await hash(password, 8);
+    const user = new User({ name, email, password: encrypted });
     user.save()
     .then(() => res.send({ success: true, user }))
     .catch(error => res.send({ success: false, message: error.message }));

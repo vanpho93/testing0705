@@ -6,6 +6,7 @@
   "author": "Van Pho Nguyen <vanpho02@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "faker": "^4.1.0",
