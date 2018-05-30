@@ -6,6 +6,7 @@ class UserService {
         const encrypted = await hash(password, 8);
         const user = new User({ name, email, password: encrypted });
         await user.save();
+        user.password = undefined;
         return user;
     }
 
@@ -14,6 +15,7 @@ class UserService {
         if (!user) throw new Error('CANNOT_FIND_USER');
         const same = await compare(password, user.password);
         if (!same) throw new Error('CANNOT_FIND_USER');
+        user.password = undefined;
         return user;
     }
 }
