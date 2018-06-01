@@ -38,7 +38,7 @@ describe('POST /user/signup', () => {
         .send(body);
         const { success, user, message } = response.body;
         equal(success, false);
-        // equal(message, undefined);
+        equal(message, 'EMPTY_NAME');
         equal(user, undefined);
         const userDb = await User.findOne({});
         equal(userDb, null);
@@ -55,7 +55,7 @@ describe('POST /user/signup', () => {
         .send(body);
         const { success, user, message } = response.body;
         equal(success, false);
-        // equal(message, undefined);
+        equal(message, 'EMPTY_PASSWORD');
         equal(user, undefined);
         const userDb = await User.findOne({});
         equal(userDb, null);
@@ -72,7 +72,7 @@ describe('POST /user/signup', () => {
         .send(body);
         const { success, user, message } = response.body;
         equal(success, false);
-        // equal(message, undefined);
+        equal(message, 'EMPTY_EMAIL');
         equal(user, undefined);
         const userDb = await User.findOne({});
         equal(userDb, null);
@@ -90,7 +90,7 @@ describe('POST /user/signup', () => {
         .send(body);
         const { success, user, message } = response.body;
         equal(success, false);
-        // equal(message, undefined);
+        equal(message, 'EMAIL_EXISTED');
         equal(user, undefined);
         const userDb = await User.findOne({ name: 'ABC Nguyen' });
         equal(userDb, null);

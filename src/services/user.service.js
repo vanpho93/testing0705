@@ -4,12 +4,18 @@ const { sign, verify } = require('../helpers/jwt');
 
 class UserService {
     static async signUp(name, email, password) {
-        if (!password) throw new Error('Invalid Password');
-        const encrypted = await hash(password, 8);
-        const user = new User({ name, email, password: encrypted });
-        await user.save();
-        user.password = undefined;
-        return user;
+        if (!password) throw new Error('EMPTY_PASSWORD');
+        if (!name) throw new Error('EMPTY_NAME');
+        if (!email) throw new Error('EMPTY_EMAIL');
+        try {
+            const encrypted = await hash(password, 8);
+            const user = new User({ name, email, password: encrypted });
+            await user.save();
+            user.password = undefined;
+            return user;
+        } catch (error) {
+            throw new Error('EMAIL_EXISTED');
+        }
     }
 
     static async signIn(email, password) {
