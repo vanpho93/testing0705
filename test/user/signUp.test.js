@@ -1,6 +1,7 @@
 const { equal } = require('assert');
 const request = require('supertest');
 const { app } = require('../../src/app');
+const { User } = require('../../src/models/user.model');
 
 describe('POST /user/signup', () => {
     it('Can sign up', async () => {
