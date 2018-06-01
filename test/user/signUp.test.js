@@ -1,7 +1,6 @@
 const { equal } = require('assert');
 const request = require('supertest');
 const { app } = require('../../src/app');
-require('../../src/helpers/connectDatabase');
 
 describe('POST /user/signup', () => {
     it('Can sign up', async () => {
@@ -10,7 +9,9 @@ describe('POST /user/signup', () => {
             name: 'ABC Nguyen',
             password: '123'
         };
-        const response = await request(app).post('/user/signup').send(body);
+        const response = await request(app)
+            .post('/user/signup')
+            .send(body);
         console.log(response.body);
     });
 });
