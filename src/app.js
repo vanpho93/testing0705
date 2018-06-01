@@ -33,6 +33,3 @@ app.post('/user/check', (req, res) => {
 });
 
 module.exports = { app };
-
-// npm intellisense
-// path intellisense
