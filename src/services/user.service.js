@@ -1,12 +1,13 @@
 const { hash, compare } = require('bcrypt');
 const { User } = require('../models/user.model');
+const { ServerError } = require('../models/server-error.model');
 const { sign, verify } = require('../helpers/jwt');
 
 class UserService {
     static async signUp(name, email, password) {
-        if (!password) throw new Error('EMPTY_PASSWORD');
-        if (!name) throw new Error('EMPTY_NAME');
-        if (!email) throw new Error('EMPTY_EMAIL');
+        if (!password) throw new ServerError('EMPTY_PASSWORD', 400);
+        if (!name) throw new ServerError('EMPTY_NAME', 400);
+        if (!email) throw new ServerError('EMPTY_EMAIL', 400);
         try {
             const encrypted = await hash(password, 8);
             const user = new User({ name, email, password: encrypted });
@@ -14,7 +15,7 @@ class UserService {
             user.password = undefined;
             return user;
         } catch (error) {
-            throw new Error('EMAIL_EXISTED');
+            throw new ServerError('EMAIL_EXISTED', 419);
         }
     }
 

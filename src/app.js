@@ -15,7 +15,7 @@ app.post('/user/signup', (req, res) => {
     const { name, email, password } = req.body;
     UserService.signUp(name, email, password)
     .then(user => res.send({ success: true, user }))
-    .catch(error => res.send({ success: false, message: error.message }));
+    .catch(error => res.status(error.status).send({ success: false, message: error.message }));
 });
 
 app.post('/user/signin', (req, res) => {

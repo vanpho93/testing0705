@@ -16,6 +16,7 @@ describe('POST /user/signup', () => {
         .post('/user/signup')
         .send(body);
         const { success, user, message } = response.body;
+        equal(response.status, 200);
         equal(success, true);
         equal(message, undefined);
         equal(user.name, 'ABC Nguyen');
@@ -37,6 +38,7 @@ describe('POST /user/signup', () => {
         .post('/user/signup')
         .send(body);
         const { success, user, message } = response.body;
+        equal(response.status, 400);
         equal(success, false);
         equal(message, 'EMPTY_NAME');
         equal(user, undefined);
@@ -54,6 +56,7 @@ describe('POST /user/signup', () => {
         .post('/user/signup')
         .send(body);
         const { success, user, message } = response.body;
+        equal(response.status, 400);
         equal(success, false);
         equal(message, 'EMPTY_PASSWORD');
         equal(user, undefined);
@@ -71,6 +74,7 @@ describe('POST /user/signup', () => {
         .post('/user/signup')
         .send(body);
         const { success, user, message } = response.body;
+        equal(response.status, 400);
         equal(success, false);
         equal(message, 'EMPTY_EMAIL');
         equal(user, undefined);
@@ -89,6 +93,7 @@ describe('POST /user/signup', () => {
         .post('/user/signup')
         .send(body);
         const { success, user, message } = response.body;
+        equal(response.status, 419);
         equal(success, false);
         equal(message, 'EMAIL_EXISTED');
         equal(user, undefined);
