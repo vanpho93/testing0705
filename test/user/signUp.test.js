@@ -3,6 +3,7 @@ const request = require('supertest');
 const { compare } = require('bcrypt');
 const { app } = require('../../src/app');
 const { User } = require('../../src/models/user.model');
+const { UserService } = require('../../src/services/user.service');
 
 describe('POST /user/signup', () => {
     it('Can sign up', async () => {
@@ -42,6 +43,7 @@ describe('POST /user/signup', () => {
         const userDb = await User.findOne({});
         equal(userDb, null);
     });
+
     it('Cannot sign up without password', async () => {
         const body = {
             email: 'abc1@gmail.com',
@@ -58,6 +60,7 @@ describe('POST /user/signup', () => {
         const userDb = await User.findOne({});
         equal(userDb, null);
     });
+
     it('Cannot sign up without email', async () => {
         const body = {
             email: '',
@@ -74,5 +77,22 @@ describe('POST /user/signup', () => {
         const userDb = await User.findOne({});
         equal(userDb, null);
     });
-    xit('Cannot sign up with duplicated email', async () => {});
+
+    it('Cannot sign up with duplicated email', async () => {
+        await UserService.signUp('Teo', 'teo@gmail.com', '123');
+        const body = {
+            email: 'teo@gmail.com',
+            name: 'ABC Nguyen',
+            password: '123'
+        };
+        const response = await request(app)
+        .post('/user/signup')
+        .send(body);
+        const { success, user, message } = response.body;
+        equal(success, false);
+        // equal(message, undefined);
+        equal(user, undefined);
+        const userDb = await User.findOne({ name: 'ABC Nguyen' });
+        equal(userDb, null);
+    });
 });
