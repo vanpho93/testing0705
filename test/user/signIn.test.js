@@ -24,16 +24,44 @@ describe('POST /user/signin', () => {
         equal(obj._id, _id);
     });
 
-    it.only('Cannot sign in without email', async () => {
-        
+    it('Cannot sign in without email', async () => {
+        const body = { password: '123' };
+        const response = await request(app).post('/user/signin').send(body);
+        const { success, user, message } = response.body;
+        equal(response.status, 400);
+        equal(success, false);
+        equal(user, undefined);
+        equal(message, 'EMPTY_EMAIL');
     });
 
-    xit('Cannot sign in without password', async () => {
+    it('Cannot sign in without password', async () => {
+        const body = { email: 'a@gmail.com' };
+        const response = await request(app).post('/user/signin').send(body);
+        const { success, user, message } = response.body;
+        equal(response.status, 400);
+        equal(success, false);
+        equal(user, undefined);
+        equal(message, 'EMPTY_PASSWORD');
     });
 
-    xit('Cannot sign in with wrong password', async () => {
+    it('Cannot sign in with wrong password', async () => {
+        const body = { email: 'teo@gmail.com', password: '1234' };
+        const response = await request(app).post('/user/signin').send(body);
+        const { success, user, message } = response.body;
+        equal(response.status, 404);
+        equal(success, false);
+        equal(user, undefined);
+        equal(message, 'CANNOT_FIND_USER');
     });
 
-    xit('Cannot sign in with removed user', async () => {
+    it('Cannot sign in with removed user', async () => {
+        await User.remove({});
+        const body = { email: 'teo@gmail.com', password: '123' };
+        const response = await request(app).post('/user/signin').send(body);
+        const { success, user, message } = response.body;
+        equal(response.status, 404);
+        equal(success, false);
+        equal(user, undefined);
+        equal(message, 'CANNOT_FIND_USER');
     });
 });
