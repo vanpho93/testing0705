@@ -20,13 +20,16 @@ class UserService {
     }
 
     static async signIn(email, password) {
-        const user = await User.findOne({ email }).select('_id name email');
-        if (!user) throw new Error('CANNOT_FIND_USER');
+        if (!password) throw new ServerError('EMPTY_PASSWORD', 400);
+        if (!email) throw new ServerError('EMPTY_EMAIL', 400);
+        const user = await User.findOne({ email });
+        if (!user) throw new ServerError('CANNOT_FIND_USER', 404);
         const same = await compare(password, user.password);
-        if (!same) throw new Error('CANNOT_FIND_USER');
+        if (!same) throw new ServerError('CANNOT_FIND_USER', 404);
         const token = await sign({ _id: user._id });
         const userInfo = user.toObject();
         userInfo.token = token;
+        delete userInfo.password;
         return userInfo;
     }
 

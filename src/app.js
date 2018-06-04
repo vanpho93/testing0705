@@ -22,7 +22,7 @@ app.post('/user/signin', (req, res) => {
     const { email, password } = req.body;
     UserService.signIn(email, password)
     .then(user => res.send({ success: true, user }))
-    .catch(error => res.send({ success: false, message: error.message }));
+    .catch(error => res.status(error.status).send({ success: false, message: error.message }));
 });
 
 app.post('/user/check', (req, res) => {
