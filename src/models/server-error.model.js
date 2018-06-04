@@ -5,4 +5,8 @@ class ServerError extends Error {
     }
 }
 
-module.exports = { ServerError };
+function exist(value, message, status) {
+    if (!value) throw new ServerError(message, status);
+}
+
+module.exports = { ServerError, exist };
