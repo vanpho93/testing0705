@@ -29,7 +29,7 @@ app.post('/user/check', (req, res) => {
     const { token } = req.body;
     UserService.checkToken(token)
     .then(user => res.send({ success: true, user }))
-    .catch(error => res.send({ success: false, message: error.message }));
+    .catch(error => res.status(error.status).send({ success: false, message: error.message }));
 });
 
 module.exports = { app };

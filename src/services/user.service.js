@@ -34,9 +34,12 @@ class UserService {
     }
 
     static async checkToken(token) {
-        const { _id } = await verify(token);
+        const { _id } = await verify(token)
+        .catch(() => {
+            throw new ServerError('INVALID_TOKEN', 400);
+        });
         const user = await User.findById(_id).select('_id name email');
-        if (!user) throw new Error('CANNOT_FIND_USER');
+        if (!user) throw new ServerError('CANNOT_FIND_USER', 404);
         const newToken = await sign({ _id: user._id });
         const userInfo = user.toObject();
         userInfo.token = newToken;
