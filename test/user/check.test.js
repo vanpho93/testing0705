@@ -15,11 +15,40 @@ describe('POST /user/check', () => {
     });
 
     it('Can check', async () => {
+        const response = await request(app).post('/user/check').send({ token });
+        const { success, user, message } = response.body;
+        const { name, _id, email } = user;
+        equal(response.status, 200);
+        equal(success, true);
+        equal(message, undefined);
+        equal(name, 'teo');
+        equal(email, 'teo@gmail.com');
+        const obj = await verify(user.token);
+        equal(obj._id, _id);
     });
 
     it('Cannot check without token', async () => {
+        const response = await request(app).post('/user/check').send({});
+        const { success, user, message } = response.body;
+        equal(response.status, 400);
+        equal(success, false);
+        equal(message, 'INVALID_TOKEN');
     });
 
     it('Cannot check with invalid token', async () => {
+        const response = await request(app).post('/user/check').send({ token: 'a.b.c' });
+        const { success, user, message } = response.body;
+        equal(response.status, 400);
+        equal(success, false);
+        equal(message, 'INVALID_TOKEN');
+    });
+
+    it('Cannot check token for removed user', async () => {
+        await User.remove({});
+        const response = await request(app).post('/user/check').send({ token });
+        const { success, user, message } = response.body;
+        equal(response.status, 404);
+        equal(success, false);
+        equal(message, 'CANNOT_FIND_USER');
     });
 });
