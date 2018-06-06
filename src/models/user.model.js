@@ -6,6 +6,7 @@ const userScheme = new mongoose.Schema({
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true, trim: true },
     avatar: { type: String, required: true, trim: true, default: faker.image.avatar },
+    stories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Story' }]
 });
 
 const User = mongoose.model('User', userScheme);

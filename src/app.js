@@ -9,7 +9,8 @@ app.use(json());
 app.use((req, res, next) => {
     res.onError = error => {
         if (!error.status) console.log(error);
-        res.status(error.status || 500).send({ success: false, message: error.message });
+        const body = { success: false, message: error.message };
+        res.status(error.status || 500).send(body);
     }
     next();
 });
