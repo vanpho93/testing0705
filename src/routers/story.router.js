@@ -10,36 +10,31 @@ storyRouter.get('/', (req, res) => {
     .then(stories => res.send({ success: true, stories }));
 });
 
+storyRouter.use((req, res, next) => {
+    verify(req.headers.token)
+    .then(obj => {
+        req.idUser = obj._id;
+        next();
+    })
+    .catch(() => res.status(400).send({ success: false, message: 'INVALID_TOKEN' }))
+});
+
 storyRouter.post('/', async (req, res) => {
-    try {
-        const { content, token } = req.body;
-        const { _id } = await verify(token);
-        const story = await StoryService.createStory(_id, content);
-        res.send({ success: true, story });
-    } catch (error) {
-        res.onError(error);
-    }
+    StoryService.createStory(req.idUser, req.body.content)
+    .then(story => res.send({ success: true, story }))
+    .catch(res.onError);
 });
 
 storyRouter.delete('/:_id', async (req, res) => {
-    try {
-        const { _id } = await verify(req.headers.token);
-        const story = await StoryService.removeStory(_id, req.params._id);
-        res.send({ success: true, story });
-    } catch (error) {
-        res.onError(error);
-    }
+    StoryService.removeStory(req.idUser, req.params._id)
+    .then(story => res.send({ success: true, story }))
+    .catch(res.onError);
 });
 
 storyRouter.put('/:_id', async (req, res) => {
-    try {
-        const { content } = req.body;
-        const { _id } = await verify(req.headers.token);
-        const story = await StoryService.updateStory(_id, req.params._id, content);
-        res.send({ success: true, story });
-    } catch (error) {
-        res.onError(error);
-    }
+    StoryService.updateStory(req.idUser, req.params._id, req.body.content)
+    .then(story => res.send({ success: true, story }))
+    .catch(res.onError);
 });
 
 module.exports = { storyRouter };
