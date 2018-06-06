@@ -7,6 +7,6 @@ const storyScheme = new mongoose.Schema({
     fans: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
-const Story = mongoose.model('Story', userScheme);
+const Story = mongoose.model('Story', storyScheme);
 
 module.exports = { Story };
