@@ -60,4 +60,14 @@ app.post('/story', async (req, res) => {
     }
 });
 
+app.delete('/story/:_id', async (req, res) => {
+    try {
+        const { _id } = await verify(req.headers.token);
+        const story = await StoryService.removeStory(_id, req.params._id);
+        res.send({ success: true, story });
+    } catch (error) {
+        res.onError(error);
+    }
+});
+
 module.exports = { app };
