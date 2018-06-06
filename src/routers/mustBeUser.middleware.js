@@ -1,3 +1,5 @@
+const { verify } = require('../helpers/jwt');
+
 const mustBeUser = (req, res, next) => {
     verify(req.headers.token)
     .then(obj => {
