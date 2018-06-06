@@ -70,4 +70,15 @@ app.delete('/story/:_id', async (req, res) => {
     }
 });
 
+app.put('/story/:_id', async (req, res) => {
+    try {
+        const { content } = req.body;
+        const { _id } = await verify(req.headers.token);
+        const story = await StoryService.updateStory(_id, req.params._id, content);
+        res.send({ success: true, story });
+    } catch (error) {
+        res.onError(error);
+    }
+});
+
 module.exports = { app };
