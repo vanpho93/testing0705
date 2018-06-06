@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const faker = require('faker');
 
-const userScheme = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true, trim: true },
@@ -9,6 +9,6 @@ const userScheme = new mongoose.Schema({
     stories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Story' }]
 });
 
-const User = mongoose.model('User', userScheme);
+const User = mongoose.model('User', userSchema);
 
 module.exports = { User };
