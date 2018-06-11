@@ -32,8 +32,8 @@ describe('DELETE /story/:_id', () => {
         equal(story.content, 'abcd');
         const storyDb = await Story.findOne({}).populate('author');
         equal(storyDb, null);
-        // const user1 = await User.findById(idUser1).populate('stories');
-        // console.log(user1);
+        const user1 = await User.findById(idUser1);
+        equal(user1.stories.length, 0);
     });
 
     it('Cannot remove story without token', async () => {
