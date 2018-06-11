@@ -25,6 +25,8 @@ describe('POST /story', () => {
         const storyDb = await Story.findOne({}).populate('author');
         equal(storyDb.content, 'abcd');
         equal(storyDb.author.name, 'teo');
+        // const user = await User.findOne().populate('stories');
+        // console.log(user);
     });
 
     it('Cannot create new story without content', async () => {
@@ -68,5 +70,16 @@ describe('POST /story', () => {
         equal(storyDb, null);
     });
 
-    xit('Cannot create new story for removed user', async () => {});
+    it.only('Cannot create new story for removed user', async () => {
+        await User.findOneAndRemove({});
+        const response = await request(app)
+            .post('/story')
+            .send({ content: 'abcd' })
+            .set({ token });
+        equal(response.status, 404);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'CANNOT_FIND_USER');
+    });
 });

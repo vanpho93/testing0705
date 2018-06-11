@@ -6,6 +6,11 @@ class StoryService {
     static async createStory(idUser, content) {
         exist(content, 'EMPTY_CONTENT', 400);
         const story = new Story({ content, author: idUser });
+        const updateObject = { $push: { stories: story._id } };
+        const user = await User.findByIdAndUpdate(idUser, updateObject);
+        if (!user) {
+            throw new ServerError('CANNOT_FIND_USER', 404);
+        }
         await story.save();
         return story;
     }
