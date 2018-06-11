@@ -70,7 +70,7 @@ describe('POST /story', () => {
         equal(storyDb, null);
     });
 
-    it.only('Cannot create new story for removed user', async () => {
+    it('Cannot create new story for removed user', async () => {
         await User.findOneAndRemove({});
         const response = await request(app)
             .post('/story')
