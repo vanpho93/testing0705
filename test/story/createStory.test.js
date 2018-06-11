@@ -13,7 +13,7 @@ describe('POST /story', () => {
         token = user.token;
     });
 
-    it.only('Can create new story', async () => {
+    it('Can create new story', async () => {
         const response = await request(app)
             .post('/story')
             .send({ content: 'abcd' })

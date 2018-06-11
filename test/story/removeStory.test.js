@@ -73,4 +73,18 @@ describe('DELETE /story/:_id', () => {
         const storyDb = await Story.findOne({}).populate('author');
         equal(storyDb.content, 'abcd');
     });
+
+    it('Cannot remove a story twice', async () => {
+        await StoryService.removeStory(idUser1, storyId);
+        const response = await request(app)
+            .delete('/story/' + storyId)
+            .set({ token: token1 });
+        equal(response.status, 404);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'CANNOT_FIND_STORY');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb, null);
+    });
 });
