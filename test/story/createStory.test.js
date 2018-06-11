@@ -27,7 +27,7 @@ describe('POST /story', () => {
         equal(storyDb.author.name, 'teo');
     });
 
-    it.only('Cannot create new story without content', async () => {
+    it('Cannot create new story without content', async () => {
         const response = await request(app)
         .post('/story')
         .send({ content: '' })
@@ -40,7 +40,33 @@ describe('POST /story', () => {
         const storyDb = await Story.findOne({}).populate('author');
         equal(storyDb, null);
     });
-    xit('Cannot create new story without token', async () => {});
-    xit('Cannot create new story with invalid token', async () => {});
+
+    it('Cannot create new story without token', async () => {
+        const response = await request(app)
+        .post('/story')
+        .send({ content: 'abcd' });
+        equal(response.status, 400);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'INVALID_TOKEN');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb, null);
+    });
+
+    it('Cannot create new story with invalid token', async () => {
+        const response = await request(app)
+        .post('/story')
+        .send({ content: 'abcd' })
+        .set({ token: 'a.b.c' });
+        equal(response.status, 400);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'INVALID_TOKEN');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb, null);
+    });
+
     xit('Cannot create new story for removed user', async () => {});
 });
