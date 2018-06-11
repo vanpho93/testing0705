@@ -13,7 +13,7 @@ describe('POST /story', () => {
         token = user.token;
     });
 
-    it('Can create new story', async () => {
+    it.only('Can create new story', async () => {
         const response = await request(app)
             .post('/story')
             .send({ content: 'abcd' })
@@ -25,8 +25,8 @@ describe('POST /story', () => {
         const storyDb = await Story.findOne({}).populate('author');
         equal(storyDb.content, 'abcd');
         equal(storyDb.author.name, 'teo');
-        // const user = await User.findOne().populate('stories');
-        // console.log(user);
+        const user = await User.findOne().populate('stories');
+        equal(user.stories[0].content, 'abcd');
     });
 
     it('Cannot create new story without content', async () => {
