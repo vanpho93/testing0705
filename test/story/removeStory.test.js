@@ -22,23 +22,55 @@ describe('DELETE /story/:_id', () => {
         storyId = story._id;
     });
 
-    it.only('Can remove story', async () => {
+    it('Can remove story', async () => {
         const response = await request(app)
             .delete('/story/' + storyId)
             .set({ token: token1 });
-        console.log(response.body);
-        // equal(response.status, 200);
-        // const { success, story } = response.body;
-        // equal(success, true);
-        // equal(story.content, 'abcd');
-        // const storyDb = await Story.findOne({}).populate('author');
-        // equal(storyDb.content, 'abcd');
-        // equal(storyDb.author.name, 'teo');
-        // const user = await User.findOne().populate('stories');
-        // console.log(user);
+        equal(response.status, 200);
+        const { success, story } = response.body;
+        equal(success, true);
+        equal(story.content, 'abcd');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb, null);
+        // const user1 = await User.findById(idUser1).populate('stories');
+        // console.log(user1);
     });
 
-    xit('Cannot remove story without token', async () => { });
-    xit('Cannot remove story with invalid token', async () => { });
-    xit('Cannot remove story with user2-token', async () => { });
+    it('Cannot remove story without token', async () => {
+        const response = await request(app)
+            .delete('/story/' + storyId)
+        equal(response.status, 400);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'INVALID_TOKEN');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb.content, 'abcd');
+    });
+
+    it('Cannot remove story with invalid token', async () => {
+        const response = await request(app)
+            .delete('/story/' + storyId)
+            .set({ token: 'a.b.c' });
+        equal(response.status, 400);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'INVALID_TOKEN');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb.content, 'abcd');
+    });
+    
+    it('Cannot remove story with user2-token', async () => {
+        const response = await request(app)
+            .delete('/story/' + storyId)
+            .set({ token: token2 });
+        equal(response.status, 404);
+        const { success, story, message } = response.body;
+        equal(success, false);
+        equal(story, undefined);
+        equal(message, 'CANNOT_FIND_STORY');
+        const storyDb = await Story.findOne({}).populate('author');
+        equal(storyDb.content, 'abcd');
+    });
 });
