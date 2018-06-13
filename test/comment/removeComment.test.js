@@ -25,7 +25,7 @@ describe('DELET /comment/:_id', () => {
         idComment = comment._id;
     });
 
-    it.only('Can update comment', async () => {
+    it('Can update comment', async () => {
         const response = await request(app)
             .delete('/comment/' + idComment)
             .set({ token: token1 });
