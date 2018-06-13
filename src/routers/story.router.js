@@ -6,6 +6,8 @@ const storyRouter = express.Router();
 
 storyRouter.get('/', (req, res) => {
     Story.find({})
+    .populate('author', 'email name avatar')
+    .populate({ path: 'comments', populate: { path: 'author', select: 'name' } })
     .then(stories => res.send({ success: true, stories }));
 });
 
