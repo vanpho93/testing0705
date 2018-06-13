@@ -92,4 +92,32 @@ describe('DELETE /comment/:_id', () => {
         const commentDb = await Comment.findOne({}).populate('author');
         equal(commentDb, null);
     });
+
+    it('Cannot remove comment of removed story', async () => {
+        await StoryService.removeStory(idUser1, idStory);
+        const response = await request(app)
+            .delete('/comment/' + idComment)
+            .set({ token: token2 });
+        equal(response.status, 404);
+        const { success, comment, message } = response.body;
+        equal(success, false);
+        equal(message, 'CANNOT_FIND_COMMENT');
+        equal(comment, undefined);
+        const commentDb = await Comment.findOne({}).populate('author');
+        equal(commentDb, null);
+    });
+
+    it('Cannot remove comment of removed user', async () => {
+        await UserService.removeUser(idUser2);
+        const response = await request(app)
+            .delete('/comment/' + idComment)
+            .set({ token: token2 });
+        equal(response.status, 404);
+        const { success, comment, message } = response.body;
+        equal(success, false);
+        equal(message, 'CANNOT_FIND_COMMENT');
+        equal(comment, undefined);
+        const commentDb = await Comment.findOne({}).populate('author');
+        equal(commentDb, null);
+    });
 });

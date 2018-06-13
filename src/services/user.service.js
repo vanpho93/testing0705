@@ -1,5 +1,7 @@
 const { hash, compare } = require('bcrypt');
 const { User } = require('../models/user.model');
+const { Comment } = require('../models/comment.model');
+const { Story } = require('../models/story.model');
 const { ServerError, exist } = require('../models/server-error.model');
 const { sign, verify } = require('../helpers/jwt');
 
@@ -44,6 +46,14 @@ class UserService {
         const userInfo = user.toObject();
         userInfo.token = newToken;
         return userInfo;
+    }
+
+    static async removeUser(idUser) {
+        const user = await User.findByIdAndRemove(idUser);
+        exist(user, 'CANNOT_FIND_USER', 404);
+        await Story.remove({ author: idUser });
+        await Comment.remove({ author: idUser });
+        return user;
     }
 }
 

@@ -1,5 +1,6 @@
 const { User } = require('../models/user.model');
 const { Story } = require('../models/story.model');
+const { Comment } = require('../models/comment.model');
 const { ServerError, exist } = require('../models/server-error.model');
 
 class StoryService {
@@ -23,6 +24,7 @@ class StoryService {
         if (!user) {
             throw new ServerError('CANNOT_FIND_USER', 404);
         }
+        await Comment.remove({ story: idStory });
         return story;
     }
 
