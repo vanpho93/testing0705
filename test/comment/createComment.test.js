@@ -1,7 +1,6 @@
 const { equal } = require('assert');
 const request = require('supertest');
 const { app } = require('../../src/app');
-const { User } = require('../../src/models/user.model');
 const { Story } = require('../../src/models/story.model');
 const { Comment } = require('../../src/models/comment.model');
 const { UserService } = require('../../src/services/user.service');
