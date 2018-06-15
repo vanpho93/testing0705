@@ -31,4 +31,16 @@ storyRouter.put('/:_id', async (req, res) => {
     .catch(res.onError);
 });
 
+storyRouter.post('/like/:_id', async (req, res) => {
+    StoryService.likeStory(req.idUser, req.params._id)
+    .then(story => res.send({ success: true, story }))
+    .catch(res.onError);
+});
+
+storyRouter.post('/dislike/:_id', async (req, res) => {
+    StoryService.dislikeStory(req.idUser, req.params._id)
+    .then(story => res.send({ success: true, story }))
+    .catch(res.onError);
+});
+
 module.exports = { storyRouter };
