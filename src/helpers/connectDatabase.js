@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 function getDatabaseUri() {
-    if (process.env.NODE_ENV === 'production') return '';
+    if (process.env.NODE_ENV === 'production') return 'mongodb://admin:abcd123@ds261440.mlab.com:61440/mean0705';
     if (process.env.NODE_ENV === 'test') return 'mongodb://localhost/mean0705x-test';
     return 'mongodb://localhost/mean0705x';
 }
