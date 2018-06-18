@@ -107,7 +107,7 @@ class FriendService {
             incommingRequests: { $ne: idUser }
         };
         const updateObjectOther = {
-            $pull: { incommingRequests: idUser },
+            $pull: { sentRequests: idUser },
         };
         const other = await User.findOneAndUpdate(queryObjectOther, updateObjectOther, { select: 'name email avatar' });
         exist(other, 'CANNOT_FIND_USER', 404);
